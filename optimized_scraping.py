@@ -24,11 +24,21 @@ def main():
     print("=" * 70)
 
     # =================================================================
-    # OPTIMIZED CONFIGURATION - MAXIMUM SPEED
+    # SIMPLE CONFIGURATION - EDIT YOUR DATABASE CREDENTIALS BELOW
     # =================================================================
     
-    # Database connection - UPDATE WITH YOUR CREDENTIALS (PostgreSQL)
-    connection_string = "postgresql://postgres:tnK55bkhn##@localhost:5432/lacentrale_db"
+    # Database connection - UPDATE WITH YOUR CREDENTIALS
+    # Method 1: Edit directly here (simplest for personal use)
+    connection_string = "postgresql://postgres:your_password_here@localhost:5432/lacentrale_db"
+    
+    # Method 2: Use environment variables (recommended)
+    # Create a .env file with POSTGRES_PASSWORD=your_password
+    # Uncomment the lines below:
+    # import os
+    # from dotenv import load_dotenv
+    # load_dotenv()  # Load .env file
+    # password = os.getenv('POSTGRES_PASSWORD', 'your_password_here')
+    # connection_string = f"postgresql://postgres:{password}@localhost:5432/lacentrale_db"
 
     # Optimized scraping configuration
     database_approach = "normalized"  # or "denormalized"

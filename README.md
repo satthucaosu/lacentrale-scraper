@@ -1,9 +1,8 @@
 # 🚗 LaCentrale Scraper
 
-A high-performance, production-ready web scraper for LaCentrale car listings with Docker support, PostgreSQL storage, and advanced anti-detection features.
+A high-performance web scraper for LaCentrale car listings with PostgreSQL storage and anti-detection features. Perfect for personal projects and data analysis.
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![Docker](https://img.shields.io/badge/docker-compose-blue.svg)
 ![PostgreSQL](https://img.shields.io/badge/postgresql-15+-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
@@ -42,48 +41,29 @@ A high-performance, production-ready web scraper for LaCentrale car listings wit
 
 ## 🚀 Quick Start
 
-### 1. Clone & Setup
+### Simple Setup (2 minutes)
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://gitlab.com/your-username/lacentrale-scraper.git
 cd lacentrale-scraper
 
-# Copy environment configuration
+# 2. Start PostgreSQL with Docker
 cp env.example .env
+# Edit .env and set your password
+docker-compose up -d postgres
 
-# Edit .env with your settings
-nano .env
-```
-
-### 2. Docker Deployment (Recommended)
-
-```bash
-# Start core services (PostgreSQL + PgAdmin)
-docker-compose up -d postgres pgadmin
-
-# Wait for database to be ready (30-60 seconds)
-docker-compose logs postgres
-
-# Run the scraper
-docker-compose --profile scraper up scraper
-
-# Or start everything including Jupyter for analysis
-docker-compose --profile analysis up -d
-```
-
-### 3. Manual Installation
-
-```bash
-# Install dependencies
+# 3. Install Python dependencies
 pip install -r requirements.txt
 
-# Setup database (update connection string in optimized_scraping.py)
-# Create PostgreSQL database: lacentrale_db
+# 4. Edit password in optimized_scraping.py (line 32)
+# connection_string = "postgresql://postgres:YOUR_PASSWORD@localhost:5432/lacentrale_db"
 
-# Run the scraper
+# 5. Run the scraper
 python optimized_scraping.py
 ```
+
+**Need detailed help?** See [SIMPLE_SETUP.md](SIMPLE_SETUP.md) for step-by-step instructions.
 
 ## 🛠️ Configuration
 
