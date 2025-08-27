@@ -45,7 +45,7 @@ A high-performance web scraper for LaCentrale car listings with PostgreSQL stora
 
 ```bash
 # 1. Clone the repository
-git clone https://gitlab.com/your-username/lacentrale-scraper.git
+git clone https://github.com/your-username/lacentrale-scraper.git
 cd lacentrale-scraper
 
 # 2. Start PostgreSQL with Docker
