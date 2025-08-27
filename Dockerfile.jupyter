@@ -1,0 +1,56 @@
+# Jupyter Notebook Dockerfile for Data Analysis
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies + Jupyter ecosystem
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir \
+    jupyter \
+    jupyterlab \
+    ipykernel \
+    matplotlib \
+    seaborn \
+    plotly \
+    dash \
+    streamlit
+
+# Copy application code (for imports)
+COPY . .
+
+# Create jupyter user
+RUN useradd -m -s /bin/bash jupyter && \
+    mkdir -p /app/notebooks /app/analysis && \
+    chown -R jupyter:jupyter /app
+
+# Switch to jupyter user
+USER jupyter
+
+# Configure Jupyter
+RUN jupyter lab --generate-config && \
+    echo "c.ServerApp.ip = '0.0.0.0'" >> ~/.jupyter/jupyter_lab_config.py && \
+    echo "c.ServerApp.port = 8888" >> ~/.jupyter/jupyter_lab_config.py && \
+    echo "c.ServerApp.allow_root = True" >> ~/.jupyter/jupyter_lab_config.py && \
+    echo "c.ServerApp.token = ''" >> ~/.jupyter/jupyter_lab_config.py && \
+    echo "c.ServerApp.password = ''" >> ~/.jupyter/jupyter_lab_config.py
+
+# Expose Jupyter port
+EXPOSE 8888
+
+# Start Jupyter Lab
+CMD ["jupyter", "lab", "--no-browser", "--allow-root"]

@@ -1,0 +1,41 @@
+MIT License
+
+Copyright (c) 2025 LaCentrale Scraper Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+===============================================================================
+ADDITIONAL LEGAL NOTICE
+===============================================================================
+
+This software is intended for educational and research purposes only. Users are
+responsible for ensuring compliance with:
+
+1. LaCentrale's Terms of Service and robots.txt
+2. Applicable data protection laws (GDPR, etc.)
+3. Local and international web scraping regulations
+4. Rate limiting and respectful usage practices
+
+The authors and contributors of this project:
+- Do not encourage or endorse any misuse of this software
+- Are not responsible for any legal consequences of its use
+- Recommend obtaining explicit permission before commercial use
+- Advise users to respect website policies and server resources
+
+Use this software responsibly and ethically.

@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: lacentrale_postgres
+    environment:
+      POSTGRES_DB: lacentrale_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your_secure_password}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - lacentrale_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d lacentrale_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # PgAdmin (Optional - Database Management UI)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: lacentrale_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@lacentrale.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin123}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+    ports:
+      - "8080:80"
+    networks:
+      - lacentrale_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Chrome Browser for Selenium (Standalone)
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: lacentrale_chrome
+    environment:
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_PASSWORD=${VNC_PASSWORD:-secret}
+    ports:
+      - "4444:4444"  # Selenium Grid
+      - "7900:7900"  # VNC Server (optional - for debugging)
+    networks:
+      - lacentrale_network
+    shm_size: 2gb
+    restart: unless-stopped
+    volumes:
+      - /dev/shm:/dev/shm
+
+  # LaCentrale Scraper Application
+  scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PYTHON_VERSION=3.11
+    container_name: lacentrale_scraper
+    environment:
+      # Database Configuration
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=lacentrale_db
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-your_secure_password}
+      
+      # Selenium Configuration
+      - SELENIUM_HUB_URL=http://selenium-chrome:4444/wd/hub
+      - USE_DOCKER_SELENIUM=true
+      
+      # Scraping Configuration
+      - SCRAPING_MODE=${SCRAPING_MODE:-optimized}
+      - START_PAGE=${START_PAGE:-1}
+      - END_PAGE=${END_PAGE:-50}
+      - NUM_WORKERS=${NUM_WORKERS:-2}
+      - INCREMENTAL_MODE=${INCREMENTAL_MODE:-true}
+      - DATABASE_APPROACH=${DATABASE_APPROACH:-normalized}
+      
+      # Application Settings
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - scraper_cache:/app/cache
+    networks:
+      - lacentrale_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      selenium-chrome:
+        condition: service_started
+    restart: "no"  # Don't auto-restart scraper (run manually)
+    profiles:
+      - scraper  # Only start when explicitly requested
+
+  # Jupyter Notebook (Optional - for data analysis)
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    container_name: lacentrale_jupyter
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=lacentrale_db
+      - DB_USER=postgres
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-your_secure_password}
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+      - ./analysis:/app/analysis
+    networks:
+      - lacentrale_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles:
+      - analysis  # Only start when explicitly requested
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  scraper_cache:
+    driver: local
+
+networks:
+  lacentrale_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
