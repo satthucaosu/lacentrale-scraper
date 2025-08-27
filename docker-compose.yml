@@ -1,28 +1,9 @@
-# Simple Docker Compose for Personal LaCentrale Scraper
+# Simple Docker Compose for LaCentrale Scraper Tools
+# Uses your existing PostgreSQL database (no new database created)
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: lacentrale_postgres
-    environment:
-      POSTGRES_DB: lacentrale_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-your_password_here}
-      PGDATA: /var/lib/postgresql/data/pgdata
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d lacentrale_db"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # PgAdmin (Database Web Interface - Optional)
+  # PgAdmin (Database Web Interface - connects to your existing database)
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: lacentrale_pgadmin
@@ -34,14 +15,24 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     ports:
       - "8080:80"
-    depends_on:
-      - postgres
+    restart: unless-stopped
+    network_mode: "host"  # Access your local PostgreSQL database
+
+  # Selenium Chrome (Optional - for debugging browser issues)
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: lacentrale_chrome
+    environment:
+      - SE_NODE_MAX_SESSIONS=3
+      - SE_VNC_PASSWORD=secret
+    ports:
+      - "4444:4444"  # Selenium Grid
+      - "7900:7900"  # VNC Server for debugging
+    shm_size: 2gb
     restart: unless-stopped
     profiles:
-      - tools  # Optional service
+      - debug  # Only start when debugging
 
 volumes:
-  postgres_data:
-    driver: local
   pgadmin_data:
     driver: local

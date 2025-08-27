@@ -27,9 +27,12 @@ def main():
     # SIMPLE CONFIGURATION - EDIT YOUR DATABASE CREDENTIALS BELOW
     # =================================================================
     
-    # Database connection - UPDATE WITH YOUR CREDENTIALS
-    # Method 1: Edit directly here (simplest for personal use)
+    # Database connection - UPDATE WITH YOUR EXISTING DATABASE CREDENTIALS
+    # Method 1: Connect to existing database (edit with your real credentials)
     connection_string = "postgresql://postgres:your_password_here@localhost:5432/lacentrale_db"
+    
+    # Method 1b: If database is on different host/port:
+    # connection_string = "postgresql://postgres:your_password_here@your_host:5432/lacentrale_db"
     
     # Method 2: Use environment variables (recommended)
     # Create a .env file with POSTGRES_PASSWORD=your_password

@@ -10,24 +10,37 @@ Quick and easy setup for your LaCentrale scraper personal project.
 
 ## ⚡ Quick Start (2 methods)
 
-### Method 1: Docker (Easiest)
+### Method 1: Use Existing Database (Recommended)
 
 ```bash
-# 1. Create your password
-cp env.example .env
-# Edit .env and change POSTGRES_PASSWORD=your_password_here
+# 1. Update your database credentials in optimized_scraping.py (line 32)
+# connection_string = "postgresql://postgres:YOUR_ACTUAL_PASSWORD@localhost:5432/lacentrale_db"
 
-# 2. Start database
-docker-compose up -d postgres
-
-# 3. Update the password in optimized_scraping.py (line 32)
-# connection_string = "postgresql://postgres:your_password_here@localhost:5432/lacentrale_db"
-
-# 4. Install Python dependencies
+# 2. Install Python dependencies
 pip install -r requirements.txt
 
-# 5. Run the scraper
+# 3. Enable incremental scraping (to add to existing 79k cars)
+# In optimized_scraping.py, set: incremental_mode = True
+
+# 4. Run the scraper
 python optimized_scraping.py
+```
+
+### Method 2: Docker Tools Only (Optional)
+
+```bash
+# 1. Start PgAdmin to view your existing database
+docker-compose up -d pgadmin
+
+# 2. Access web interface: http://localhost:8080
+# Email: admin@lacentrale.com / Password: admin123
+
+# 3. Add your existing database server in PgAdmin:
+# Host: host.docker.internal (Windows/Mac) or 172.17.0.1 (Linux)
+# Port: 5432
+# Database: lacentrale_db
+# Username: postgres
+# Password: your_actual_password
 ```
 
 ### Method 2: Local PostgreSQL
