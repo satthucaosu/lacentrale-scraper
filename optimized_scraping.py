@@ -11,10 +11,6 @@ Optimized version with all performance improvements enabled
 Usage: python optimized_scraping.py
 """
 
-import sys
-import warnings 
-import atexit
-
 
 def main():
     """
@@ -29,7 +25,7 @@ def main():
     
     # Database connection - UPDATE WITH YOUR EXISTING DATABASE CREDENTIALS
     # Method 1: Connect to existing database (edit with your real credentials)
-    connection_string = "postgresql://postgres:your_password_here@localhost:5432/lacentrale_db"
+    # connection_string = "postgresql://postgres:YOUR_PASSWORD##@localhost:5432/lacentrale_db"
     
     # Method 1b: If database is on different host/port:
     # connection_string = "postgresql://postgres:your_password_here@your_host:5432/lacentrale_db"
@@ -37,17 +33,17 @@ def main():
     # Method 2: Use environment variables (recommended)
     # Create a .env file with POSTGRES_PASSWORD=your_password
     # Uncomment the lines below:
-    # import os
-    # from dotenv import load_dotenv
-    # load_dotenv()  # Load .env file
-    # password = os.getenv('POSTGRES_PASSWORD', 'your_password_here')
-    # connection_string = f"postgresql://postgres:{password}@localhost:5432/lacentrale_db"
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()  # Load .env file
+    password = os.getenv('POSTGRES_PASSWORD', 'your_password_here')
+    connection_string = f"postgresql://postgres:{password}@localhost:5432/lacentrale_db"
 
     # Optimized scraping configuration
     database_approach = "normalized"  # or "denormalized"
-    start_page = 1
-    end_page = 2 # Smaller range for testing
-    auto_close_driver = True
+    start_page = 45
+    end_page = 50 # Smaller range for testing
+    auto_close_driver = False
     incremental_mode = True
 
     # PERFORMANCE SETTINGS

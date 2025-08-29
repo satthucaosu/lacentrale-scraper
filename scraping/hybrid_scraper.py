@@ -27,7 +27,7 @@ import demjson3
 from sqlalchemy import text
 from database.db_utils import DatabaseManager, bulk_insert_car_listings
 from data.save_data import validate_car_data
-from scraping.utils import random_delay, random_delay_fast, pass_accepter, pass_accepter_fast, gradual_scroll, fast_scroll, get_undetected_driver, get_optimized_undetected_driver, cleanup_chrome_processes, cleanup_worker_directories, debug_page_elements
+from scraping.utils import random_delay, pass_accepter, pass_accepter_fast, gradual_scroll, fast_scroll, get_undetected_driver, get_optimized_undetected_driver, cleanup_chrome_processes, debug_page_elements, cleanup_worker_directories
 
 
 class HybridScraper:
@@ -563,10 +563,8 @@ class HybridScraper:
         """
         try:
             # Navigate to page
-            if self.optimized_mode:
-                random_delay_fast()
-            else:
-                random_delay()
+            
+            random_delay(0.1, 0.3)
             
             driver.get(f"https://www.lacentrale.fr/listing?options=&page={page_num}&sortBy=firstOnlineDateDesc")
             
@@ -663,10 +661,8 @@ class HybridScraper:
         print(f"📄 Scraping page {page_num}...")
         
         # Navigate to page using optimized or standard pattern
-        if self.optimized_mode:
-            random_delay_fast()
-        else:
-            random_delay()
+        
+        random_delay(0.2, 0.4)
         
         self.driver.get(f"https://www.lacentrale.fr/listing?options=&page={page_num}&sortBy=firstOnlineDateDesc")
         

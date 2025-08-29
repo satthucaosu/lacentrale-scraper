@@ -19,7 +19,6 @@ _driver_init_lock = threading.Lock()
 # Suppress Windows-specific undetected_chromedriver warnings
 if sys.platform.startswith('win'):
     # Redirect stderr temporarily to suppress Windows handle errors
-    import io
     from contextlib import redirect_stderr
 
 class WindowsSafeChrome(uc.Chrome):
@@ -210,28 +209,7 @@ def random_delay(min_sec=1.5, max_sec=3.5):
     """Sleep randomly between min and max seconds."""
     time.sleep(random.uniform(min_sec, max_sec))
 
-def simulate_mouse_movements(driver, target_element, steps=30):
-    """Moves the mouse slowly over an element in a human-like arc."""
-    actions = ActionChains(driver)
-    location = target_element.location_once_scrolled_into_view
-    size = target_element.size
-
-    center_x = location['x'] + size['width'] / 2
-    center_y = location['y'] + size['height'] / 2
-
-    # Start from random screen location
-    start_x = random.randint(0, 300)
-    start_y = random.randint(0, 300)
-
-    for i in range(steps):
-        inter_x = start_x + (center_x - start_x) * (i / steps)
-        inter_y = start_y + (center_y - start_y) * (i / steps)
-        actions.move_by_offset(inter_x - actions.w3c_actions.pointer_inputs[0].x,
-                               inter_y - actions.w3c_actions.pointer_inputs[0].y)
-        actions.pause(random.uniform(0.01, 0.05))
-
-    actions.move_to_element(target_element).perform()
-    random_delay(0.2, 0.4)
+# simulate_mouse_movements function removed - was unused
 
 def gradual_scroll(driver, total_scrolls=5, max_scroll_px=400):
     """Scrolls down the page gradually in random increments."""
@@ -376,3 +354,4 @@ def cleanup_worker_directories():
                     pass  # Ignore cleanup errors
     except:
         pass  # Ignore any errors during cleanup
+# cleanup_worker_directories function removed - was unused

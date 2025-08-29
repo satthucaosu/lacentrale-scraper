@@ -1,380 +1,328 @@
-# 🚗 LaCentrale Scraper
+# 🚀 LaCentrale Car Scraper
 
-A high-performance web scraper for LaCentrale car listings with PostgreSQL storage and anti-detection features. Perfect for personal projects and data analysis.
+A high-performance web scraper for LaCentrale car listings with PostgreSQL database storage and intelligent duplicate detection.
 
-![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
-![PostgreSQL](https://img.shields.io/badge/postgresql-15+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+## ✨ Features
 
-## 🌟 Features
+- **🔥 High Performance**: Parallel processing with up to 20-30x speed improvement
+- **🎯 Smart Scraping**: Undetected Chrome driver with anti-detection measures
+- **💾 Database Storage**: Direct PostgreSQL insertion with optimized schema
+- **🔄 Incremental Mode**: Only scrape new listings to avoid duplicates
+- **📊 Real-time Stats**: Live progress tracking and comprehensive reporting
+- **🛡️ Error Handling**: Automatic retries and graceful failure recovery
+- **🔍 Data Validation**: Comprehensive car data validation before storage
 
-### 🚀 High Performance
-- **Hybrid Scraping**: Direct PostgreSQL insertion with smart buffering
-- **Parallel Processing**: Multi-threaded scraping with 2-5 concurrent workers
-- **Optimized Mode**: 20-30x faster than standard scraping
-- **Incremental Scraping**: Only fetch new listings since last run
+## 📋 Quick Start
 
-### 🛡️ Anti-Detection
-- **Undetected Chrome**: Stealth browsing with undetected-chromedriver
-- **Human-like Behavior**: Random delays, gradual scrolling, mouse movements
-- **Rotating User Agents**: Multiple browser fingerprints
-- **Docker Isolation**: Clean browser environments
+### Prerequisites
+- Python 3.11+
+- PostgreSQL database
 
-### 💾 Database Support
-- **Dual Schema**: Normalized (data integrity) or Denormalized (performance)
-- **Auto-Indexing**: Optimized database indexes for fast queries
-- **Bulk Insertion**: Efficient batch processing
-- **JSON Backup**: Automatic fallback on database errors
-
-### 🐳 Docker Ready
-- **Complete Docker Compose**: PostgreSQL + PgAdmin + Selenium + Jupyter
-- **Multi-stage Builds**: Optimized production containers
-- **Environment Configuration**: Easy deployment with .env files
-- **Health Checks**: Automatic service monitoring
-
-## 📋 Prerequisites
-
-- **Docker & Docker Compose** (recommended)
-- **OR** Python 3.11+ with PostgreSQL 15+
-- **4GB+ RAM** (for Chrome instances)
-- **5GB+ disk space** (for data storage)
-
-## 🚀 Quick Start
-
-### Simple Setup (2 minutes)
+### Installation
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/satthucaosu/lacentrale-scraper.git
+git clone <your-repo-url>
 cd lacentrale-scraper
 
-# 2. Start PostgreSQL with Docker
-cp env.example .env
-# Edit .env and set your password
-docker-compose up -d postgres
+# 2. Create virtual environment
+python -m venv venv
 
-# 3. Install Python dependencies
+# 3. Activate virtual environment
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# 4. Install dependencies
 pip install -r requirements.txt
 
-# 4. Edit password in optimized_scraping.py (line 32)
+# 5. Configure database (edit line 32 in optimized_scraping.py)
 # connection_string = "postgresql://postgres:YOUR_PASSWORD@localhost:5432/lacentrale_db"
 
-# 5. Run the scraper
+# 6. Run the scraper
 python optimized_scraping.py
 ```
 
-**Need detailed help?** See [SIMPLE_SETUP.md](SIMPLE_SETUP.md) for step-by-step instructions.
+## ⚙️ Configuration
 
-## 🛠️ Configuration
+### Basic Configuration (optimized_scraping.py)
 
-### Environment Variables
+```python
+# Database connection
+connection_string = "postgresql://postgres:your_password@localhost:5432/lacentrale_db"
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `POSTGRES_PASSWORD` | `your_secure_password` | PostgreSQL password |
-| `SCRAPING_MODE` | `optimized` | Scraping mode: optimized/parallel/normal |
-| `START_PAGE` | `1` | Starting page number |
-| `END_PAGE` | `50` | Ending page number |
-| `NUM_WORKERS` | `2` | Parallel workers (2-5 recommended) |
-| `INCREMENTAL_MODE` | `true` | Only scrape new listings |
-| `DATABASE_APPROACH` | `normalized` | Database schema: normalized/denormalized |
+# Scraping settings
+start_page = 1              # Starting page
+end_page = 50               # Ending page
+num_workers = 2             # Parallel workers (2-3 recommended)
+incremental_mode = True     # Only scrape new cars
+```
 
-### Scraping Modes
+### Advanced Configuration (.env file)
 
-| Mode | Speed | Detection Risk | Use Case |
-|------|-------|----------------|----------|
-| `normal` | 1x | Low | Safe, long-running |
-| `optimized` | 10-20x | Medium | Fast data collection |
-| `parallel` | 20-30x | High | Maximum speed |
+Create a `.env` file from `env.example`:
 
-## 📊 Usage Examples
+```bash
+cp env.example .env
+```
+
+Edit `.env` with your settings:
+```env
+POSTGRES_PASSWORD=your_secure_password_here
+START_PAGE=1
+END_PAGE=50
+NUM_WORKERS=2
+INCREMENTAL_MODE=true
+```
+
+Then uncomment lines 40-44 in `optimized_scraping.py` to use environment variables.
+
+## 🏗️ Database Schema
+
+### Normalized Approach (Recommended)
+- **manufacturers**: Car manufacturers (Toyota, BMW, etc.)
+- **car_models**: Car models per manufacturer
+- **vehicles**: Vehicle specifications
+- **dealers**: Dealer information
+- **car_listings**: Main listings table
+
+### Denormalized Approach (Simpler)
+- **car_listings_flat**: All data in single table
+
+## 📊 Performance Features
+
+### Speed Optimizations
+- **Parallel Processing**: Multiple Chrome instances working simultaneously
+- **Optimized Chrome**: Disabled images, plugins, and unnecessary features
+- **Fast Delays**: Reduced wait times (0.1-0.3 seconds)
+- **Smart Buffering**: 3000-car memory buffer before database flush
+- **Direct DB Insertion**: No intermediate JSON files
+
+### Anti-Detection
+- **Undetected ChromeDriver**: Bypasses most detection systems
+- **Random Delays**: Human-like browsing patterns
+- **User Agent Rotation**: Multiple browser signatures
+- **Stealth Mode**: Hidden automation indicators
+
+## 🔄 Incremental Scraping
+
+The scraper supports intelligent incremental mode:
+
+```python
+incremental_mode = True  # Enable in optimized_scraping.py
+```
+
+**Benefits:**
+- Only processes NEW car listings
+- Skips existing cars automatically
+- Maintains state between sessions
+- Saves time and resources
+- Perfect for daily updates
+
+**How it works:**
+1. Loads existing car references from database
+2. Compares scraped cars against known cars
+3. Only processes truly new listings
+4. Updates state file automatically
+
+## 📈 Usage Examples
 
 ### Basic Scraping
-
 ```bash
-# Scrape 100 pages with default settings
-docker-compose --profile scraper run --rm scraper
-
-# Custom page range
-docker-compose --profile scraper run --rm -e START_PAGE=1 -e END_PAGE=200 scraper
-
-# Maximum speed mode
-docker-compose --profile scraper run --rm -e SCRAPING_MODE=parallel -e NUM_WORKERS=5 scraper
+# Scrape pages 1-10 with default settings
+python optimized_scraping.py
 ```
 
-### Database Operations
-
+### Custom Page Range
+Edit `optimized_scraping.py`:
 ```python
-# Connect to database
-from database.db_utils import DatabaseManager
-
-db = DatabaseManager(
-    "postgresql://postgres:password@localhost:5432/lacentrale_db",
-    approach="normalized"
-)
-
-# Query examples
-with db.get_session() as session:
-    # Count total cars
-    count = session.query(CarListings).count()
-    print(f"Total cars: {count}")
-    
-    # Find cars by make
-    bmw_cars = session.query(CarListings).join(Vehicles).join(Manufacturers)\
-        .filter(Manufacturers.name == "BMW").all()
+start_page = 100
+end_page = 200
 ```
 
-### Data Analysis
-
-```bash
-# Start Jupyter for analysis
-docker-compose --profile analysis up -d jupyter
-
-# Access at http://localhost:8888
-# Username: jupyter (no password)
-```
-
-## 🏗️ Architecture
-
-### System Components
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Scraper       │────│   PostgreSQL    │────│    PgAdmin      │
-│   (Python)      │    │   (Database)    │    │     (UI)        │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │              ┌─────────────────┐              │
-         └──────────────│   Selenium      │──────────────┘
-                        │   (Chrome)      │
-                        └─────────────────┘
-```
-
-### Data Flow
-
-1. **Scraper** navigates LaCentrale pages using undetected Chrome
-2. **Parser** extracts JSON data and validates structure
-3. **Buffer** accumulates cars in memory (2000-3000 items)
-4. **Database** receives bulk insertions with conflict resolution
-5. **Backup** creates JSON files on database errors
-
-### Database Schema
-
-#### Normalized (Recommended)
-- `manufacturers` - Car brands (Peugeot, BMW, etc.)
-- `car_models` - Models per brand (Golf, A4, etc.)
-- `dealers` - Seller information
-- `vehicles` - Vehicle specifications
-- `car_listings` - Main listing data
-
-#### Denormalized (Performance)
-- `car_listings_flat` - All data in single table
-
-## 🔧 Development
-
-### Local Development
-
-```bash
-# Development container with extra tools
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-
-# Install development dependencies
-pip install pytest pytest-cov black flake8 mypy
-
-# Run tests
-pytest tests/
-
-# Code formatting
-black .
-flake8 .
-```
-
-### Adding Features
-
-1. **Extend Database Schema**: Modify `database/schema.py`
-2. **Add Validation**: Update `data/save_data.py`
-3. **Enhance Scraping**: Modify `scraping/hybrid_scraper.py`
-4. **Update Docker**: Rebuild containers
-
-### Performance Tuning
-
+### High-Speed Scraping
 ```python
-# Increase buffer size for high-volume scraping
-scraper.buffer_size = 5000
-
-# Optimize database connections
-db_manager.engine.pool_size = 20
-db_manager.engine.max_overflow = 30
-
-# Enable all optimizations
-scraper.enable_optimized_mode()
-scraper.enable_incremental_scraping()
+num_workers = 4        # More parallel workers
+end_page = 1000       # Larger page range
 ```
 
-## 📈 Monitoring
-
-### Service Health
-
-```bash
-# Check all services
-docker-compose ps
-
-# View logs
-docker-compose logs -f scraper
-docker-compose logs -f postgres
-
-# Monitor resource usage
-docker stats
+### Daily Updates
+```python
+incremental_mode = True  # Only new cars
+start_page = 1
+end_page = 50           # Check recent pages
 ```
 
-### Database Monitoring
+## 📊 Database Queries
 
+### Basic Statistics
 ```sql
--- Active connections
-SELECT * FROM pg_stat_activity;
+-- Total cars
+SELECT COUNT(*) FROM car_listings;
 
--- Database size
-SELECT pg_size_pretty(pg_database_size('lacentrale_db'));
+-- Price statistics  
+SELECT MIN(price), MAX(price), AVG(price) FROM car_listings;
 
--- Index usage
-SELECT * FROM pg_stat_user_indexes;
+-- Popular manufacturers
+SELECT m.name, COUNT(*) 
+FROM car_listings cl 
+JOIN vehicles v ON cl.vehicle_id = v.id 
+JOIN manufacturers m ON v.manufacturer_id = m.id 
+GROUP BY m.name 
+ORDER BY COUNT(*) DESC 
+LIMIT 10;
 ```
 
-### Web Interfaces
+### Advanced Queries
+```sql
+-- Cars under 20k euros
+SELECT * FROM car_listings WHERE price < 20000;
 
-- **PgAdmin**: http://localhost:8080 (Database management)
-- **Jupyter**: http://localhost:8888 (Data analysis)
-- **Selenium VNC**: http://localhost:7900 (Browser debugging)
+-- BMW cars with low mileage
+SELECT cl.*, m.name as make, cm.name as model 
+FROM car_listings cl
+JOIN vehicles v ON cl.vehicle_id = v.id
+JOIN manufacturers m ON v.manufacturer_id = m.id  
+JOIN car_models cm ON v.car_model_id = cm.id
+WHERE m.name = 'BMW' AND cl.mileage < 50000;
 
-## 🛡️ Security
+-- Recent listings
+SELECT * FROM car_listings 
+WHERE first_online_date >= CURRENT_DATE - INTERVAL '7 days';
+```
 
-### Best Practices
-
-- **Change default passwords** in `.env`
-- **Use environment variables** for secrets
-- **Enable SSL** for production databases
-- **Limit network access** with firewalls
-- **Regular backups** of scraped data
-
-### Rate Limiting
-
-The scraper includes built-in rate limiting:
-- Random delays: 1.5-3.5 seconds (normal mode)
-- Fast delays: 0.1-0.3 seconds (optimized mode)
-- Gradual scrolling with human-like patterns
-- Browser fingerprint rotation
-
-## 🚨 Troubleshooting
+## 🛠️ Troubleshooting
 
 ### Common Issues
 
-#### Chrome Driver Issues
+**Database Connection Error**
 ```bash
-# Check Chrome version
-docker-compose exec scraper google-chrome --version
+# Check PostgreSQL is running
+# Windows: Check Services
+# Mac: brew services list | grep postgres  
+# Linux: sudo systemctl status postgresql
 
-# Reinstall ChromeDriver
-docker-compose build --no-cache scraper
+# Verify credentials in optimized_scraping.py
 ```
 
-#### Database Connection Errors
+**Chrome/Selenium Issues**
 ```bash
-# Check PostgreSQL status
-docker-compose logs postgres
+# Update ChromeDriver
+pip install --upgrade undetected-chromedriver
 
-# Reset database
-docker-compose down -v
-docker-compose up -d postgres
+# Reduce workers if detection issues
+num_workers = 1  # In optimized_scraping.py
 ```
 
-#### Memory Issues
+**Memory Issues**
 ```bash
-# Increase Docker memory limit
-# In Docker Desktop: Settings > Resources > Memory: 8GB+
-
-# Reduce parallel workers
-export NUM_WORKERS=2
+# Reduce buffer size in hybrid_scraper.py
+self.buffer_size = 1000  # Default is 3000
 ```
 
-#### Permission Errors (Linux/macOS)
+**Performance Issues**
 ```bash
-# Fix file permissions
-sudo chown -R $USER:$USER .
-chmod -R 755 .
+# Enable all optimizations
+optimized_mode = True
+parallel_mode = True
+num_workers = 2  # Start with 2, increase gradually
 ```
 
-### Debug Mode
+## 📁 Project Structure
 
-```bash
-# Enable verbose logging
-docker-compose --profile scraper run --rm -e VERBOSE_LOGGING=true scraper
-
-# Access Selenium VNC for browser debugging
-# http://localhost:7900 (password: secret)
-
-# Check database directly
-docker-compose exec postgres psql -U postgres -d lacentrale_db
+```
+lacentrale-scraper/
+├── optimized_scraping.py      # Main entry point
+├── requirements.txt           # Dependencies
+├── env.example               # Configuration template
+├── SIMPLE_SETUP.md          # Quick setup guide
+├── README.md                # This file
+├── data/                    # Scraped data and state
+│   ├── scraping_state.json  # Incremental mode state
+│   └── backup/             # Emergency backups
+├── database/               # Database layer
+│   ├── db_utils.py         # Database operations
+│   └── schema.py          # Table definitions
+├── scraping/              # Scraping engine
+│   ├── hybrid_scraper.py  # Main scraper class
+│   └── utils.py          # Utilities and helpers
+├── logs/                 # Application logs
+└── tests/               # Test files
 ```
 
-## 📊 Performance Benchmarks
+## 🔧 Development
 
-### Scraping Speed
+### Running Tests
+```bash
+# Run all tests
+python -m pytest tests/
 
-| Mode | Pages/Hour | Cars/Hour | Memory Usage |
-|------|------------|-----------|--------------|
-| Normal | 50-100 | 1,000-2,000 | 200MB |
-| Optimized | 500-1,000 | 10,000-20,000 | 300MB |
-| Parallel (3 workers) | 1,000-1,500 | 20,000-30,000 | 500MB |
+# Run specific test
+python -m pytest tests/test_scraper.py
+```
 
-### Database Performance
+### Code Quality
+```bash
+# Format code
+black .
 
-| Schema | Insert Speed | Query Speed | Storage |
-|--------|--------------|-------------|---------|
-| Normalized | 5,000 cars/min | Medium | Efficient |
-| Denormalized | 8,000 cars/min | Fast | Larger |
+# Lint code  
+flake8 .
+
+# Type checking
+mypy .
+```
+
+## 📊 Performance Metrics
+
+### Speed Comparison
+- **Normal Mode**: ~1 car per second
+- **Optimized Mode**: ~20-30 cars per second
+- **Parallel Mode**: ~60-100 cars per second (3 workers)
+
+### Resource Usage
+- **Memory**: 1-2GB RAM (depends on workers)
+- **CPU**: 1-2 cores per worker
+- **Storage**: ~100MB per 1,000 cars
+- **Network**: 10-50 MB/hour
+
+### Recommended Settings
+```python
+# Personal use
+num_workers = 2
+buffer_size = 2000
+optimized_mode = True
+
+# Production use  
+num_workers = 3-4
+buffer_size = 3000
+optimized_mode = True
+incremental_mode = True
+```
 
 ## 🤝 Contributing
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
 
-### Development Guidelines
+## 📝 License
 
-- **Follow PEP 8** for Python code style
-- **Add tests** for new features
-- **Update documentation** for API changes
-- **Use semantic versioning** for releases
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 📄 License
+## ⚠️ Disclaimer
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ⚠️ Legal Notice
-
-This scraper is for educational and research purposes only. Please:
-- **Respect** LaCentrale's robots.txt and terms of service
-- **Use reasonable delays** to avoid overloading servers
-- **Consider legal implications** in your jurisdiction
-- **Obtain permission** for commercial use
-
-## 🙏 Acknowledgments
-
-- **LaCentrale** for providing the car listing data
-- **Selenium** and **undetected-chromedriver** communities
-- **PostgreSQL** and **Docker** projects
-- **Python** web scraping ecosystem
+This scraper is for educational and personal use only. Please respect LaCentrale's robots.txt and terms of service. Use responsibly and don't overload their servers.
 
 ## 📞 Support
 
-- **Issues**: [GitLab Issues](https://gitlab.com/your-username/lacentrale-scraper/-/issues)
-- **Documentation**: [Wiki](https://gitlab.com/your-username/lacentrale-scraper/-/wikis/home)
-- **Email**: your-email@domain.com
+- **Documentation**: See SIMPLE_SETUP.md for quick start
+- **Issues**: Check existing issues or create new ones
+- **Performance**: Start with small page ranges to test setup
 
 ---
 
-⭐ **Star this repository** if you find it useful!
-
-Built with ❤️ using Python, Docker, and PostgreSQL.
+🎉 **Happy scraping!** Remember to start small and scale up gradually.
