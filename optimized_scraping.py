@@ -16,7 +16,7 @@ def main():
     """
     Optimized scraping workflow - Maximum speed configuration
     """
-    print("🚀 LaCentrale OPTIMIZED Scraping - MAXIMUM SPEED MODE")
+    print(">>> LaCentrale OPTIMIZED Scraping - MAXIMUM SPEED MODE")
     print("=" * 70)
 
     # =================================================================
@@ -41,8 +41,8 @@ def main():
 
     # Optimized scraping configuration
     database_approach = "normalized"  # or "denormalized"
-    start_page = 45
-    end_page = 50 # Smaller range for testing
+    start_page = 1
+    end_page = 30 # Smaller range for testing
     auto_close_driver = False
     incremental_mode = True
 
@@ -51,7 +51,7 @@ def main():
     parallel_mode = True        # Parallel processing
     num_workers = 2            # Number of parallel workers
 
-    print(f"📋 OPTIMIZED Configuration:")
+    print(f">>> OPTIMIZED Configuration:")
     print(f"   Database: {database_approach} approach")
     print(f"   Pages: {start_page} to {end_page}")
     print(f"   Mode: Maximum speed (6-30x faster)")
@@ -75,11 +75,11 @@ def main():
         scraper.backup_enabled = True           # Safety net
         scraper.auto_index = True               # Performance optimization
         scraper.enable_optimized_mode()         # Enable all optimizations             
-        print("✅ Optimized hybrid scraper initialized successfully!")
+        print("[OK] Optimized hybrid scraper initialized successfully!")
         
     except Exception as e:
-        print(f"❌ Failed to initialize scraper: {e}")
-        print("💡 Check your database connection string and ensure PostgreSQL is running")
+        print(f"[ERROR] Failed to initialize scraper: {e}")
+        print("NOTE: Check your database connection string and ensure PostgreSQL is running")
         return
     
     # =================================================================
@@ -87,13 +87,13 @@ def main():
     # =================================================================
 
     try:
-        print(f"\n🏗️ Step 2: Setting up database with performance indexes...")
+        print(f"\n>>> Step 2: Setting up database with performance indexes...")
         scraper.setup_database_with_indexes()
-        print("✅ Database setup completed successfully!")
+        print("[OK] Database setup completed successfully!")
         
     except Exception as e:
-        print(f"❌ Database setup failed: {e}")
-        print("💡 Ensure you have CREATE privileges on the database")
+        print(f"[ERROR] Database setup failed: {e}")
+        print("NOTE: Ensure you have CREATE privileges on the database")
         return
     
     # =================================================================
@@ -102,14 +102,14 @@ def main():
     
     if incremental_mode:
         try:
-            print(f"\n🔄 Step 3: Configuring incremental scraping...")
+            print(f"\n>>> Step 3: Configuring incremental scraping...")
             scraper.enable_incremental_scraping()
         except Exception as e:
-            print(f"❌ Failed to enable incremental mode: {e}")
-            print("💡 Continuing with full scraping mode")
+            print(f"[ERROR] Failed to enable incremental mode: {e}")
+            print("NOTE: Continuing with full scraping mode")
             incremental_mode = False
     else:
-        print(f"\n📋 Step 3: Full scraping mode enabled")
+        print(f"\n>>> Step 3: Full scraping mode enabled")
     
 
     # =================================================================
@@ -117,7 +117,7 @@ def main():
     # =================================================================
     
     try:
-        print(f"\n🎯 Step 4: Starting MAXIMUM SPEED scraping...")
+        print(f"\n>>> Step 4: Starting MAXIMUM SPEED scraping...")
         print(f"   Strategy: Parallel + Optimized + Direct DB")
         print(f"   Workers: {num_workers} parallel Chrome instances")
         print(f"   Optimizations: All enabled")
@@ -132,17 +132,17 @@ def main():
         )
         
     except KeyboardInterrupt:
-        print(f"\n⚠️ Scraping interrupted by user")
-        print("📊 Partial results have been saved to database")
+        print(f"\n[WARNING] Scraping interrupted by user")
+        print("INFO: Partial results have been saved to database")
         
     except Exception as e:
-        print(f"❌ Scraping error: {e}")
-        print("💡 Check website accessibility and network connection")
+        print(f"[ERROR] Scraping error: {e}")
+        print("NOTE: Check website accessibility and network connection")
         
     finally:
-        print(f"\n🎉 OPTIMIZED SCRAPING COMPLETED!")
+        print(f"\n>>> OPTIMIZED SCRAPING COMPLETED!")
         print(f"=" * 60)
-        print(f"🚀 MAXIMUM SPEED MODE BENEFITS:")
+        print(f">>> MAXIMUM SPEED MODE BENEFITS:")
         print(f"   • Optimized Chrome driver (disabled images/plugins)")
         print(f"   • Fast delays (0.1-0.3 seconds)")
         print(f"   • Fast cookie consent (1 second timeout)")
@@ -151,13 +151,13 @@ def main():
         print(f"   • Large database buffer (3000 cars)")
         print(f"   • Expected speed improvement: 20-30x")
         
-        print(f"\n📋 Next steps:")
+        print(f"\n>>> Next steps:")
         print(f"   1. Run query examples: python query_examples.py")
         print(f"   2. Compare performance with normal mode")
         print(f"   3. Monitor for any detection issues")
         print(f"   4. Adjust num_workers if needed (2-5 recommended)")
 
 if __name__ == "__main__":
-    print("🚀 LaCentrale OPTIMIZED Scraping - MAXIMUM SPEED MODE")
+    print(">>> LaCentrale OPTIMIZED Scraping - MAXIMUM SPEED MODE")
     print("=" * 70)
     main()
